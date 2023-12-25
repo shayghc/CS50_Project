@@ -7,13 +7,17 @@ def main():
 
 
 def get_team_name():
-    # Get user input of team name, allow any format for the user
-    response = "n"
-    while response == "n":
+    # Get user input of team name, allow any format (except blank) for the user
+    while True:
         team_name = input("Enter the team name: ").strip()
-        confirmation = input(f"Is {team_name} the correct name? (Y/N)")
-        response = confirmation.lower()
-    return team_name
+        confirmation = input(f"Is {team_name} the correct name? (Y/N)").lower()
+
+        if team_name and confirmation == "y":
+            return team_name
+        elif not team_name:
+            print("Sorry, team name cannot be blank")
+        else:
+            print("Invalid response. Please enter 'Y' to confirm")
 
 
 def save_team_data_to_csv(team_name, file_path="team_data.csv"):
