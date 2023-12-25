@@ -42,7 +42,7 @@ def get_sprint_details():
             print("Invalid date format. Please enter date in YYYY-MM-DD format.")
 
     return {
-        "start_year": start_date.strftime("%Y-%m-%d")
+        "sprint_start_date": start_date.strftime("%Y-%m-%d"),
         }
 
 
