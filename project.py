@@ -12,7 +12,9 @@ def main():
         for i in range(6):
             new_sprint = get_sprint_details(i + 1, sprint_details)
             while new_sprint is None:
-                print("Sprint overlaps with existing sprint. Please choose a different start date.")
+                print(
+                    "Sprint overlaps with existing sprint. Please choose a different start date."
+                )
                 new_sprint = get_sprint_details(i + 1, sprint_details)
             sprint_details.append(new_sprint)
 
@@ -43,7 +45,9 @@ def get_sprint_details(count, existing_sprints):
     # Get sprint start date from the user
     while True:
         try:
-            start_date_str = input(f"Enter start date for sprint {count} (YYYY-MM-DD): ")
+            start_date_str = input(
+                f"Enter start date for sprint {count} (YYYY-MM-DD): "
+            )
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
             break
         except ValueError:
@@ -61,7 +65,7 @@ def get_sprint_details(count, existing_sprints):
     while True:
         try:
             sprint_duration = int(input("Enter sprint duration (calendar days): "))
-            if 7 <= sprint_duration <= 30: 
+            if 7 <= sprint_duration <= 30:
                 break
             else:
                 print("Sprint duration must be between 7 and 30 days.")
@@ -72,10 +76,12 @@ def get_sprint_details(count, existing_sprints):
     sprint_start = start_date
     sprint_end = start_date + timedelta(days=sprint_duration)
     overlap_detected = any(
-        existing_sprint and
-        datetime.strptime(existing_sprint.get("sprint_start_date", ""), "%Y-%m-%d") < sprint_end
-        and datetime.strptime(existing_sprint.get("sprint_start_date", ""), "%Y-%m-%d") +
-        timedelta(days=existing_sprint.get("sprint_duration", 0)) > sprint_start
+        existing_sprint
+        and datetime.strptime(existing_sprint.get("sprint_start_date", ""), "%Y-%m-%d")
+        < sprint_end
+        and datetime.strptime(existing_sprint.get("sprint_start_date", ""), "%Y-%m-%d")
+        + timedelta(days=existing_sprint.get("sprint_duration", 0))
+        > sprint_start
         for existing_sprint in existing_sprints
     )
 
@@ -98,11 +104,13 @@ def save_team_data_to_csv(team_name, sprint_details, file_path="team_data.csv"):
 
         # Write sprint data rows
         for sprint_data in sprint_details:
-            writer.writerow([
-                sprint_data["sprint_start_date"],
-                sprint_data["sprint_throughput"],
-                sprint_data["sprint_duration"]
-            ])
+            writer.writerow(
+                [
+                    sprint_data["sprint_start_date"],
+                    sprint_data["sprint_throughput"],
+                    sprint_data["sprint_duration"],
+                ]
+            )
 
 
 if __name__ == "__main__":
