@@ -1,3 +1,0 @@
-PIP installable libraries required
-
-csv
