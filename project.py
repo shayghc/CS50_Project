@@ -4,8 +4,8 @@ from datetime import datetime
 
 def main():
     name = get_valid_team_name()
-    save_team_data_to_csv(name)
     sprint_details = get_sprint_details()
+    save_team_data_to_csv(name, sprint_details)
     print("Sprint Details:", f"{sprint_details}") # Delete when ready
 
 
@@ -41,18 +41,43 @@ def get_sprint_details():
         except ValueError:
             print("Invalid input. Please enter a valid integer for throughput.")
 
+    # Get sprint duration from the user
+    while True:
+        try:
+            sprint_duration = int(input("Enter sprint duration (calendar days): "))
+            if 7 <= sprint_duration <= 30: 
+                break
+            else:
+                print("Sprint duration must be between 7 and 30 days.")
+        except ValueError:
+            print("Invalid input. Please enter a valid integer for sprint duration.")
 
-    return {
+
+    return [
+        {
         "sprint_start_date": start_date.strftime("%Y-%m-%d"),
         "sprint_throughput": throughput,
+        "sprint_duration": sprint_duration,
         }
+    ]
 
 
-def save_team_data_to_csv(team_name, file_path="team_data.csv"):
+def save_team_data_to_csv(team_name, sprint_details, file_path="team_data.csv"):
     with open(file_path, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
         # Save team name as a single string in the first cell
         writer.writerow([team_name])
+
+        # Write header row
+        writer.writerow(["Sprint Start Date", "Sprint Throughput", "Sprint Duration"])
+
+        # Write sprint data rows
+        for sprint_data in sprint_details:
+            writer.writerow([
+                sprint_data["sprint_start_date"],
+                sprint_data["sprint_throughput"],
+                sprint_data["sprint_duration"]
+            ])
 
 
 if __name__ == "__main__":
