@@ -2,11 +2,11 @@ import csv
 
 
 def main():
-    name = get_team_name()
+    name = get_valid_team_name()
     save_team_data_to_csv(name)
 
 
-def get_team_name():
+def get_valid_team_name():
     # Get user input of team name, allow any format (except blank) for the user
     while True:
         team_name = input("Enter the team name: ").strip()
