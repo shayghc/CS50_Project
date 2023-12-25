@@ -1,12 +1,21 @@
 import csv
 from datetime import datetime
+import os
 
 
 def main():
-    name = get_valid_team_name()
-    sprint_details = get_sprint_details()
-    save_team_data_to_csv(name, sprint_details)
-    print("Sprint Details:", f"{sprint_details}") # Delete when ready
+    team_name = get_valid_team_name()
+    # Check if the CSV file exists
+    if not os.path.exists("team_data.csv"):
+        sprint_details = []
+        # Run get_sprint_details six times and append the results to sprint_details
+        for i in range(6):
+            sprint_details.append(get_sprint_details(i + 1))
+
+        # Save sprint_details to the CSV file
+        save_team_data_to_csv(team_name, sprint_details, "team_data.csv")
+    else:
+        print("CSV file already exists. Skipping data generation.")
 
 
 def get_valid_team_name():
@@ -23,11 +32,11 @@ def get_valid_team_name():
             print("Invalid response. Please enter 'Y' to confirm")
 
 
-def get_sprint_details():
+def get_sprint_details(count):
     # Get sprint start date from the user
     while True:
         try:
-            start_date_str = input("Enter sprint start date (YYYY-MM-DD): ")
+            start_date_str = input(f"Enter start date for sprint {count} (YYYY-MM-DD): ")
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
             break
         except ValueError:
@@ -53,13 +62,11 @@ def get_sprint_details():
             print("Invalid input. Please enter a valid integer for sprint duration.")
 
 
-    return [
-        {
+    return {
         "sprint_start_date": start_date.strftime("%Y-%m-%d"),
         "sprint_throughput": throughput,
         "sprint_duration": sprint_duration,
-        }
-    ]
+    }
 
 
 def save_team_data_to_csv(team_name, sprint_details, file_path="team_data.csv"):
