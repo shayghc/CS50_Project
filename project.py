@@ -1,5 +1,5 @@
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 
@@ -10,10 +10,17 @@ def main():
         sprint_details = []
         # Run get_sprint_details six times and append the results to sprint_details
         for i in range(6):
-            sprint_details.append(get_sprint_details(i + 1))
+            new_sprint = get_sprint_details(i + 1, sprint_details)
+            while new_sprint is None:
+                print("Sprint overlaps with existing sprint. Please choose a different start date.")
+                new_sprint = get_sprint_details(i + 1, sprint_details)
+            sprint_details.append(new_sprint)
 
         # Save sprint_details to the CSV file
-        save_team_data_to_csv(team_name, sprint_details, "team_data.csv")
+        if all(sprint is not None for sprint in sprint_details):
+            save_team_data_to_csv(team_name, sprint_details, "team_data.csv")
+        else:
+            print("Failed to generate CSV file due to overlapping sprints.")
     else:
         print("CSV file already exists. Skipping data generation.")
 
@@ -29,10 +36,10 @@ def get_valid_team_name():
         elif not team_name:
             print("Sorry, team name cannot be blank")
         else:
-            print("Invalid response. Please enter 'Y' to confirm")
+            print("Enter 'Y' to confirm a correct team name")
 
 
-def get_sprint_details(count):
+def get_sprint_details(count, existing_sprints):
     # Get sprint start date from the user
     while True:
         try:
@@ -61,12 +68,23 @@ def get_sprint_details(count):
         except ValueError:
             print("Invalid input. Please enter a valid integer for sprint duration.")
 
+    # Check for sprint overlap
+    sprint_start = start_date
+    sprint_end = start_date + timedelta(days=sprint_duration)
+    overlap_detected = any(
+        existing_sprint and
+        datetime.strptime(existing_sprint.get("sprint_start_date", ""), "%Y-%m-%d") < sprint_end
+        and datetime.strptime(existing_sprint.get("sprint_start_date", ""), "%Y-%m-%d") +
+        timedelta(days=existing_sprint.get("sprint_duration", 0)) > sprint_start
+        for existing_sprint in existing_sprints
+    )
 
-    return {
-        "sprint_start_date": start_date.strftime("%Y-%m-%d"),
-        "sprint_throughput": throughput,
-        "sprint_duration": sprint_duration,
-    }
+    if not overlap_detected:
+        return {
+            "sprint_start_date": start_date.strftime("%Y-%m-%d"),
+            "sprint_throughput": throughput,
+            "sprint_duration": sprint_duration,
+        }
 
 
 def save_team_data_to_csv(team_name, sprint_details, file_path="team_data.csv"):
