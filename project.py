@@ -1,6 +1,8 @@
 import csv
 from datetime import datetime, timedelta
 import os
+import random
+import statistics
 
 
 def main():
@@ -21,10 +23,14 @@ def main():
         # Save sprint_details to the CSV file
         if all(sprint is not None for sprint in sprint_details):
             save_team_data_to_csv(team_name, sprint_details, "team_data.csv")
+
+            # Call the simulate_delivery_date function from main
+            simulate_delivery_date(sprint_details)
         else:
             print("Failed to generate CSV file due to overlapping sprints.")
     else:
         print("CSV file already exists. Skipping data generation.")
+    
 
 
 def get_valid_team_name():
@@ -112,7 +118,6 @@ def save_team_data_to_csv(team_name, sprint_details, file_path="team_data.csv"):
                     sprint_data["sprint_duration"],
                 ]
             )
-
 
 
 if __name__ == "__main__":
