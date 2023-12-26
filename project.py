@@ -1,8 +1,6 @@
 import csv
 from datetime import datetime, timedelta
 import os
-import random
-import statistics
 
 
 def main():
