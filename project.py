@@ -1,7 +1,6 @@
 import csv
 from datetime import datetime, timedelta
 import os
-from icecream import ic
 
 
 def main():
@@ -10,7 +9,7 @@ def main():
     if not os.path.exists("team_data.csv"):
         sprint_details = []
         # Run get_sprint_details six times and append the results to sprint_details
-        for i in range(6):
+        for i in range(2):
             new_sprint = get_sprint_details(i + 1, sprint_details)
             while new_sprint is None:
                 print(
@@ -50,6 +49,7 @@ def get_sprint_details(count, existing_sprints):
                 f"Enter start date for sprint {count} (YYYY-MM-DD): "
             )
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+
             break
         except ValueError:
             print("Invalid date format. Please enter date in YYYY-MM-DD format.")
