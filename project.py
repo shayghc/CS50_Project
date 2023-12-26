@@ -1,6 +1,7 @@
 import csv
 from datetime import datetime, timedelta
 import os
+from icecream import ic
 
 
 def main():
