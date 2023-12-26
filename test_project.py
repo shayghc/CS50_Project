@@ -1,7 +1,9 @@
 import pytest
 from unittest.mock import patch, Mock
 from itertools import cycle
-from project import get_valid_team_name, get_sprint_details
+from project import get_valid_team_name, get_sprint_details, save_team_data_to_csv
+import csv
+import os
 
 def custom_input(values):
     iterator = cycle(values)
